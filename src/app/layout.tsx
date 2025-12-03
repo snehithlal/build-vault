@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   description: "Project management for architects and builders",
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <html lang="en" className="dark">
       <body
@@ -35,3 +35,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+export default RootLayout;

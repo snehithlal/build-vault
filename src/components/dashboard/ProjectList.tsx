@@ -4,20 +4,26 @@ import { useProjectStore } from '@/store/useProjectStore';
 import Link from 'next/link';
 import { Folder, Plus } from 'lucide-react';
 
+import { useState } from 'react';
+import { CreateProjectModal } from './CreateProjectModal';
 
-
-export function ProjectList() {
+export const ProjectList = () => {
   const { projects } = useProjectStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-      {/* New Project Card */}
-      <button className="group relative flex flex-col items-center justify-center h-48 rounded-xl border-2 border-dashed border-muted hover:border-primary/50 hover:bg-muted/50 transition-all duration-300">
-        <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-          <Plus className="h-6 w-6 text-primary" />
-        </div>
-        <span className="mt-4 font-medium text-muted-foreground group-hover:text-primary">Create New Project</span>
-      </button>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+        {/* New Project Card */}
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="group relative flex flex-col items-center justify-center h-48 rounded-xl border-2 border-dashed border-muted hover:border-primary/50 hover:bg-muted/50 transition-all duration-300"
+        >
+          <Plus className="h-8 w-8 text-muted-foreground group-hover:text-primary transition-colors" />
+          <span className="mt-4 text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
+            Create New Project
+          </span>
+        </button>
 
       {/* Project Cards */}
       {projects.map((project) => (
@@ -46,6 +52,8 @@ export function ProjectList() {
           </div>
         </Link>
       ))}
-    </div>
+      </div>
+      <CreateProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </>
   );
 }

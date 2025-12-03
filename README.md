@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BuildVault
+
+BuildVault is a project management application designed for architects and builders. It allows managing multiple clients and projects with a flexible, hierarchical category system and dynamic item details.
+
+## Features
+
+-   **Project Management**: Create and manage construction projects.
+-   **Recursive Categories**: Infinite nesting of categories (e.g., Flooring -> Living Room -> Tiles).
+-   **Dynamic Item Details**: Add custom attributes (Price, Brand, Color, etc.) to any item on the fly.
+-   **Templates**: (Coming Soon) Reusable project structures.
+-   **Premium UI**: Modern, dark-mode first design with glassmorphism effects.
+-   **Mobile Friendly**: Responsive design with mobile sidebar navigation.
+
+## Tech Stack
+
+-   **Framework**: Next.js 15 (App Router)
+-   **Styling**: Tailwind CSS v4
+-   **State Management**: Zustand
+-   **Data Fetching**: React Query
+-   **Icons**: Lucide React
 
 ## Getting Started
 
-First, run the development server:
+1.  Install dependencies:
+    ```bash
+    npm install
+    ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2.  Run the development server:
+    ```bash
+    npm run dev
+    ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3.  Open [http://localhost:3000](http://localhost:3000) with your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+-   `src/app`: Next.js App Router pages and layouts.
+-   `src/components`: Reusable UI components.
+    -   `dashboard`: Components for the main dashboard (Project List, etc.).
+    -   `project`: Components for the project detail view (Category Tree, Item Details).
+    -   `layout`: Layout components (Sidebar, etc.).
+-   `src/lib`: Utility functions and types.
+-   `src/store`: Zustand state store.

@@ -4,7 +4,7 @@ export interface CategoryNode extends Category {
   children: CategoryNode[];
 }
 
-export function buildCategoryTree(categories: Category[]): CategoryNode[] {
+export const buildCategoryTree = (categories: Category[]): CategoryNode[] => {
   const map = new Map<string, CategoryNode>();
   const roots: CategoryNode[] = [];
 

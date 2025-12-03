@@ -8,7 +8,7 @@ interface ItemListProps {
   items: Item[];
 }
 
-export function ItemList({ items }: ItemListProps) {
+export const ItemList = ({ items }: ItemListProps) => {
   const { setSelectedItem } = useProjectStore();
 
   if (items.length === 0) {

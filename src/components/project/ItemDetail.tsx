@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { Item } from '@/lib/types';
-import { Save, Trash2, Plus, X } from 'lucide-react';
+import { Save, Plus, X } from 'lucide-react';
 
 interface ItemDetailProps {
   item: Item;
   onSave: (updatedItem: Item) => void;
 }
 
-export function ItemDetail({ item: initialItem, onSave }: ItemDetailProps) {
+export const ItemDetail = ({ item: initialItem, onSave }: ItemDetailProps) => {
   const [item, setItem] = useState(initialItem);
   const [newAttributeKey, setNewAttributeKey] = useState('');
 
