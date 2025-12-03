@@ -55,7 +55,7 @@ export const ItemDetail = ({ item: initialItem, onSave }: ItemDetailProps) => {
         </div>
         <button
           onClick={() => onSave(item)}
-          className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-primary/90 transition-colors"
+          className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer"
         >
           <Save className="h-4 w-4" />
           Save Changes

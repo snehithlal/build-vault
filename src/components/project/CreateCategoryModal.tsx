@@ -27,8 +27,8 @@ export const CreateCategoryModal = ({ isOpen, onClose, projectId, parentId }: Cr
 
     const newCategory: Category = {
       id: crypto.randomUUID(),
-      projectId,
-      parentId,
+      project_id: projectId,
+      parent_id: parentId,
       name,
       type,
     };

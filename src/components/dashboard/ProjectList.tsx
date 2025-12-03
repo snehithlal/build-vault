@@ -4,12 +4,20 @@ import { useProjectStore } from '@/store/useProjectStore';
 import Link from 'next/link';
 import { Folder, Plus } from 'lucide-react';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CreateProjectModal } from './CreateProjectModal';
 
 export const ProjectList = () => {
-  const { projects } = useProjectStore();
+  const { projects, fetchProjects, isLoading } = useProjectStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
+  if (isLoading && projects.length === 0) {
+    return <div className="p-8 text-center text-muted-foreground">Loading projects...</div>;
+  }
 
   return (
     <>
@@ -45,9 +53,9 @@ export const ProjectList = () => {
 
           <div className="mt-auto">
             <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">{project.name}</h3>
-            <p className="text-sm text-muted-foreground mt-1">{project.clientName}</p>
+            <p className="text-sm text-muted-foreground mt-1">{project.client_name}</p>
             <div className="mt-4 text-xs text-muted-foreground">
-              Created {new Date(project.createdAt).toLocaleDateString()}
+              Created {new Date(project.created_at).toLocaleDateString()}
             </div>
           </div>
         </Link>

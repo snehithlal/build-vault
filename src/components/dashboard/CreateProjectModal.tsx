@@ -21,12 +21,10 @@ export const CreateProjectModal = ({ isOpen, onClose }: CreateProjectModalProps)
     e.preventDefault();
     if (!name || !clientName) return;
 
-    const newProject: Project = {
-      id: crypto.randomUUID(),
+    const newProject = {
       name,
-      clientName,
-      createdAt: new Date().toISOString(),
-      status: 'active',
+      client_name: clientName,
+      status: 'active' as const,
     };
 
     addProject(newProject);

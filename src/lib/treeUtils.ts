@@ -16,8 +16,8 @@ export const buildCategoryTree = (categories: Category[]): CategoryNode[] => {
   // Build tree
   categories.forEach((cat) => {
     const node = map.get(cat.id)!;
-    if (cat.parentId) {
-      const parent = map.get(cat.parentId);
+    if (cat.parent_id) {
+      const parent = map.get(cat.parent_id);
       if (parent) {
         parent.children.push(node);
       } else {

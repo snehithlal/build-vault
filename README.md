@@ -42,3 +42,34 @@ BuildVault is a project management application designed for architects and build
     -   `layout`: Layout components (Sidebar, etc.).
 -   `src/lib`: Utility functions and types.
 -   `src/store`: Zustand state store.
+
+## Supabase Setup
+
+BuildVault uses Supabase for authentication and database.
+
+### 1. Environment Variables
+
+Create a `.env.local` file in the root directory and add your Supabase credentials:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 2. Database Migration
+
+The database schema is managed via Supabase migrations.
+
+**For Local Development:**
+1.  Install Supabase CLI: `brew install supabase/tap/supabase`
+2.  Login: `supabase login`
+3.  Link Project: `supabase link --project-ref your_project_ref`
+4.  Push Schema: `supabase db push`
+
+**For Production (Vercel):**
+It is recommended to use GitHub Actions to automatically push migrations on merge. Alternatively, you can run `supabase db push` from your local machine linked to the production project.
+
+### 3. Authentication
+
+-   **Email/Password**: Enabled by default.
+-   **Email Confirmation**: For development, you may want to disable "Confirm email" in Supabase Authentication -> Providers -> Email settings to allow instant login with dummy emails.

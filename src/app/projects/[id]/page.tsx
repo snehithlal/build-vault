@@ -5,12 +5,14 @@ import { CategoryTree } from '@/components/project/CategoryTree';
 import { ItemList } from '@/components/project/ItemList';
 import { ItemDetail } from '@/components/project/ItemDetail';
 import { CreateCategoryModal } from '@/components/project/CreateCategoryModal';
+import { CreateItemModal } from '@/components/project/CreateItemModal';
 import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { useProjectStore } from '@/store/useProjectStore';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Settings, Share2, Plus, Box, Menu } from 'lucide-react';
+import { toast } from 'sonner';
 
 const ProjectPage = () => {
   const params = useParams();
@@ -18,10 +20,70 @@ const ProjectPage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   // Store data
-  const { projects, categories } = useProjectStore();
+  const {
+    projects,
+    categories,
+    fetchCategories,
+    fetchItems,
+    fetchProject,
+    updateItem,
+    setSelectedCategory,
+    setSelectedItem,
+    selectedCategoryId,
+    selectedItemId
+  } = useProjectStore();
+
   const project = projects.find(p => p.id === projectId);
-  const projectCategories = categories.filter(c => c.projectId === projectId);
+  const projectCategories = categories.filter(c => c.project_id === projectId);
+
+  // Initialize from URL on mount
+  useEffect(() => {
+    const catId = searchParams.get('categoryId');
+    const itemId = searchParams.get('itemId');
+
+    if (catId && catId !== selectedCategoryId) setSelectedCategory(catId);
+    if (itemId && itemId !== selectedItemId) setSelectedItem(itemId);
+  }, [searchParams, setSelectedCategory, setSelectedItem]); // Run once on mount/params change
+
+  // Sync state to URL
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (selectedCategoryId) {
+      params.set('categoryId', selectedCategoryId);
+    } else {
+      params.delete('categoryId');
+    }
+
+    if (selectedItemId) {
+      params.set('itemId', selectedItemId);
+    } else {
+      params.delete('itemId');
+    }
+
+    // Only push if changed to avoid loops/redundant pushes
+    const newSearch = params.toString();
+    const currentSearch = searchParams.toString();
+
+    if (newSearch !== currentSearch) {
+      router.replace(`/projects/${projectId}?${newSearch}`, { scroll: false });
+    }
+  }, [selectedCategoryId, selectedItemId, projectId, router, searchParams]);
+
+  useEffect(() => {
+    if (projectId) {
+      if (!project) {
+        fetchProject(projectId);
+      }
+      fetchCategories(projectId).then(() => {
+        fetchItems();
+      });
+    }
+  }, [projectId, fetchCategories, fetchItems, fetchProject, project]);
 
   const tree = buildCategoryTree(projectCategories);
 
@@ -43,7 +105,7 @@ const ProjectPage = () => {
           </Link>
           <div>
             <h1 className="font-semibold text-sm">{project.name}</h1>
-            <p className="text-xs text-muted-foreground">{project.clientName}</p>
+            <p className="text-xs text-muted-foreground">{project.client_name}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -121,10 +183,11 @@ const ProjectPage = () => {
 }
 
 const ProjectContent = () => {
-  const { selectedCategoryId, selectedItemId, items, categories } = useProjectStore();
+  const { selectedCategoryId, selectedItemId, items, categories, updateItem } = useProjectStore();
+  const [isCreateItemModalOpen, setIsCreateItemModalOpen] = useState(false);
 
   // Filter items for the selected category
-  const categoryItems = items.filter(i => i.categoryId === selectedCategoryId);
+  const categoryItems = items.filter(i => i.category_id === selectedCategoryId);
   const selectedItem = items.find(i => i.id === selectedItemId);
   const selectedCategory = categories.find(c => c.id === selectedCategoryId);
 
@@ -132,7 +195,10 @@ const ProjectContent = () => {
     return (
       <ItemDetail
         item={selectedItem}
-        onSave={(updated) => console.log('Save:', updated)}
+        onSave={async (updated) => {
+          await updateItem(updated);
+          toast.success('Item saved successfully');
+        }}
       />
     );
   }
@@ -145,12 +211,21 @@ const ProjectContent = () => {
             <h2 className="text-2xl font-bold">{selectedCategory?.name || 'Items'}</h2>
             <p className="text-sm text-muted-foreground">Manage items in this category</p>
           </div>
-          <button className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-primary/90 transition-colors">
+          <button
+            onClick={() => setIsCreateItemModalOpen(true)}
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer"
+          >
             <Plus className="h-4 w-4" />
             Add Item
           </button>
         </div>
         <ItemList items={categoryItems} />
+
+        <CreateItemModal
+          isOpen={isCreateItemModalOpen}
+          onClose={() => setIsCreateItemModalOpen(false)}
+          categoryId={selectedCategoryId}
+        />
       </div>
     );
   }
